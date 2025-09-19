@@ -1,0 +1,209 @@
+:root {
+    --primary: #6c5ce7;
+    --primary-dark: #5649c9;
+    --secondary: #a29bfe;
+    --accent: #fd79a8;
+    --light: #f8f9fa;
+    --dark: #2d3436;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    color: #333;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden;
+    max-width: 600px;
+    margin: auto;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 1.5rem; 
+    text-align: center;
+    border-bottom: none;
+}
+
+.card-body {
+    padding: 1.5rem; 
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.form-control,
+.form-select {
+    padding: 0.6rem 1rem; 
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    font-size: 0.9rem; 
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.25);
+}
+
+.btn-primary, 
+.btn-outline-secondary {
+    padding: 0.6rem 1.25rem; 
+    font-size: 0.9rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), #8c7ffa);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 1.2rem 0; /* menor margem */
+}
+
+.rating-option {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    padding: 0.4rem;
+    border-radius: 10px;
+}
+
+.rating-option:hover {
+    background-color: rgba(108, 92, 231, 0.1);
+}
+
+.rating-option input {
+    display: none;
+}
+
+.rating-option label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem; /* emojis menores */
+    margin-bottom: 0.25rem;
+}
+
+.rating-option span {
+    font-size: 0.75rem; 
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.rating-option input:checked + label {
+    transform: scale(1.1);
+}
+
+.rating-option input:checked + label + span {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 300px; 
+}
+
+.notification {
+    background: white;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    animation: slideIn 0.3s ease forwards;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary);
+}
+
+.notification.success { border-left-color: #28a745; }
+.notification.error { border-left-color: #dc3545; }
+.notification.warning { border-left-color: #ffc107; }
+
+.notification i { font-size: 1.2rem; margin-right: 0.5rem; }
+
+.notification-content { flex: 1; }
+.notification-title { font-weight: 600; margin-bottom: 0.2rem; }
+.notification-message { font-size: 0.85rem; color: #6c757d; }
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #6c757d;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: color 0.2s;
+}
+
+.notification-close:hover { color: var(--dark); }
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px; /* barra menor */
+    width: 100%;
+    background: rgba(0,0,0,0.1);
+}
+
+.notification-progress-bar {
+    height: 100%;
+    width: 100%;
+    background: var(--primary);
+    animation: progressBar 5s linear forwards;
+}
+
+.notification.success .notification-progress-bar { background: #28a745; }
+.notification.error .notification-progress-bar { background: #dc3545; }
+.notification.warning .notification-progress-bar { background: #ffc107; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes progressBar {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+@media (max-width: 768px) {
+    .card-body { padding: 1rem; }
+    .rating-container { flex-wrap: wrap; }
+    .rating-option { flex: 0 0 33.333%; margin-bottom: 0.8rem; }
+    .notification-container { left: 10px; right: 10px; max-width: none; }
+}

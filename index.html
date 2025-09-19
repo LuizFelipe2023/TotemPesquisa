@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Formulário de Satisfação</title>
+    <link rel="stylesheet" href="css/form.css">
+</head>
+
+<body>
+    <div id="notificationContainer" class="notification-container"></div>
+    <div class="container">
+        <div class="row justify-content-center mt-4 mb-4">
+            <div class="col-md-8 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-2">Formulário de Satisfação</h2>
+                        <p class="mb-0">Sua opinião é muito importante para melhorarmos nossos serviços</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="pesquisa" class="needs-validation" novalidate>
+
+                            <div class="mb-4">
+                                <label for="nome" class="form-label">Nome:</label>
+                                <input type="text" class="form-control" name="nome" id="nome" required
+                                    placeholder="Digite seu nome">
+                                <div class="invalid-feedback">Por favor, insira seu nome.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="cpf" class="form-label">CPF:</label>
+                                <input type="text" class="form-control" name="cpf" id="cpf" required maxlength="14"
+                                    placeholder="000.000.000-00">
+                                <div class="invalid-feedback">Digite um CPF válido.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Nível de Satisfação:</label>
+                                <div class="rating-container">
+                                    <div class="rating-option">
+                                        <input type="radio" name="nivel_satisfacao" id="nivel1" value="1" required>
+                                        <label for="nivel1">😡</label>
+                                        <span>Muito Insatisfeito</span>
+                                    </div>
+                                    <div class="rating-option">
+                                        <input type="radio" name="nivel_satisfacao" id="nivel2" value="2">
+                                        <label for="nivel2">🙁</label>
+                                        <span>Insatisfeito</span>
+                                    </div>
+                                    <div class="rating-option">
+                                        <input type="radio" name="nivel_satisfacao" id="nivel3" value="3">
+                                        <label for="nivel3">😐</label>
+                                        <span>Neutro</span>
+                                    </div>
+                                    <div class="rating-option">
+                                        <input type="radio" name="nivel_satisfacao" id="nivel4" value="4">
+                                        <label for="nivel4">🙂</label>
+                                        <span>Satisfeito</span>
+                                    </div>
+                                    <div class="rating-option">
+                                        <input type="radio" name="nivel_satisfacao" id="nivel5" value="5">
+                                        <label for="nivel5">😃</label>
+                                        <span>Muito Satisfeito</span>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback d-block text-center">Por favor, selecione um nível de
+                                    satisfação.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="comentario" class="form-label">Comentário (Opcional):</label>
+                                <textarea class="form-control" name="comentario" id="comentario" rows="3"
+                                    placeholder="Escreva algo..."></textarea>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i> Enviar
+                                </button>
+                            </div>
+                        </form>
+                        <div class="d-grid mt-3">
+                            <a href="login.html" class="btn btn-outline-secondary btn-lg">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/processaFormulario.js"></script>
+</body>
+
+</html>

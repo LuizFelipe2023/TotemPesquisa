@@ -1,0 +1,80 @@
+:root {
+    --primary: #6c5ce7;
+    --primary-dark: #5649c9;
+    --secondary: #a29bfe;
+    --accent: #fd79a8;
+    --light: #f8f9fa;
+    --dark: #2d3436;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    color: #333;
+}
+
+.card {
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.card-body {
+    padding: 2.5rem;
+}
+
+.btn-primary {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), #8c7ffa);
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+@media (max-width: 480px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+}
+
+.btn-secondary-custom {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7); 
+    border: none;
+    color: white;
+    width: 100%;
+}
+
+.btn-secondary-custom:hover {
+    background: linear-gradient(135deg, #5649c9, #8c7ffa);
+}
