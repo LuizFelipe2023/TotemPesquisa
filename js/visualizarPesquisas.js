@@ -1,39 +1,11 @@
 const supabaseUrl = 'https://kywwztxxglpsztszujyd.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5d3d6dHh4Z2xwc3p0c3p1anlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMDU3NTUsImV4cCI6MjA3Mzg4MTc1NX0.otzQH3CBar6HfDgfr52R2-RJa5AI2MUNzj8Y7ENEn5k';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5d3d6dHh4Z2xwc3p1anlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMDU3NTUsImV4cCI6MjA3Mzg4MTc1NX0.otzQH3CBar6HfDgfr52R2-RJa5AI2MUNzj8Y7ENEn5k';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const tabela = document.querySelector('#tabelaPesquisas tbody');
 let pesquisas = [];
 
-async function checkSession() {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-        console.error('Erro ao verificar sessão:', error);
-        alert('Erro de autenticação. Faça login novamente.');
-        window.location.href = 'login.html';
-        return;
-    }
-
-    const session = data.session;
-    if (!session) {
-        console.log('Usuário não autenticado');
-        window.location.href = 'login.html';
-    } else {
-        console.log('Usuário logado:', session.user.email);
-    }
-}
-
-document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-        alert('Erro ao deslogar: ' + error.message);
-        return;
-    }
-    localStorage.removeItem('supabaseSession');
-    window.location.href = 'login.html';
-});
-
-document.getElementById('carregarPesquisas').addEventListener('click', async () => {
+async function carregarPesquisas() {
     console.log('Tentando carregar pesquisas...');
     const { data, error } = await supabase
         .from('pesquisas')
@@ -72,6 +44,35 @@ document.getElementById('carregarPesquisas').addEventListener('click', async () 
         `;
         tabela.appendChild(tr);
     });
+}
+
+async function checkSession() {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+        console.error('Erro ao verificar sessão:', error);
+        alert('Erro de autenticação. Faça login novamente.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const session = data.session;
+    if (!session) {
+        console.log('Usuário não autenticado');
+        window.location.href = 'login.html';
+    } else {
+        console.log('Usuário logado:', session.user.email);
+        carregarPesquisas();
+    }
+}
+
+document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        alert('Erro ao deslogar: ' + error.message);
+        return;
+    }
+    localStorage.removeItem('supabaseSession');
+    window.location.href = 'login.html';
 });
 
 document.getElementById('gerarPDF').addEventListener('click', () => {
@@ -118,5 +119,5 @@ document.getElementById('gerarPDF').addEventListener('click', () => {
     doc.save('pesquisas.pdf');
 });
 
-// Chama verificação de sessão ao carregar a página
+
 checkSession();
