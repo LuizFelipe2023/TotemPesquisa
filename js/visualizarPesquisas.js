@@ -5,12 +5,18 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 const tabela = document.querySelector('#tabelaPesquisas tbody');
 let pesquisas = [];
 
-// --- Controle de sessão ---
 async function checkSession() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+        console.error('Erro ao verificar sessão:', error);
+        alert('Erro de autenticação. Faça login novamente.');
+        window.location.href = 'login.html';
+        return;
+    }
 
+    const session = data.session;
     if (!session) {
-        // Usuário não logado, redireciona para login
+        console.log('Usuário não autenticado');
         window.location.href = 'login.html';
     } else {
         console.log('Usuário logado:', session.user.email);
@@ -23,17 +29,26 @@ document.getElementById('logoutBtn')?.addEventListener('click', async () => {
         alert('Erro ao deslogar: ' + error.message);
         return;
     }
+    localStorage.removeItem('supabaseSession');
     window.location.href = 'login.html';
 });
 
 document.getElementById('carregarPesquisas').addEventListener('click', async () => {
+    console.log('Tentando carregar pesquisas...');
     const { data, error } = await supabase
         .from('pesquisas')
         .select('*')
         .order('data', { ascending: false });
 
     if (error) {
+        console.error('Erro ao carregar pesquisas:', error);
         alert('Erro ao carregar pesquisas: ' + error.message);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        console.log('Nenhuma pesquisa encontrada ou RLS bloqueando acesso');
+        tabela.innerHTML = '<tr><td colspan="5" class="text-center">Nenhuma pesquisa encontrada</td></tr>';
         return;
     }
 
@@ -103,4 +118,5 @@ document.getElementById('gerarPDF').addEventListener('click', () => {
     doc.save('pesquisas.pdf');
 });
 
+// Chama verificação de sessão ao carregar a página
 checkSession();
