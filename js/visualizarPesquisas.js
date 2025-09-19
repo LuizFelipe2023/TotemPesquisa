@@ -2,129 +2,108 @@ const supabaseUrl = 'https://kywwztxxglpsztszujyd.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5d3d6dHh4Z2xwc3p0c3p1anlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzMDU3NTUsImV4cCI6MjA3Mzg4MTc1NX0.otzQH3CBar6HfDgfr52R2-RJa5AI2MUNzj8Y7ENEn5k';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-const tabela = document.querySelector('#tabelaPesquisas tbody');
 let pesquisas = [];
+let tabela;
+
+async function checkSession() {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+        window.location.href = 'login.html';
+        return;
+    }
+    console.log('Usuário logado:', data.session.user.email);
+}
 
 async function carregarPesquisas() {
-    console.log('Tentando carregar pesquisas...');
     const { data, error } = await supabase
         .from('pesquisas')
         .select('*')
         .order('data', { ascending: false });
 
     if (error) {
-        console.error('Erro ao carregar pesquisas:', error);
         alert('Erro ao carregar pesquisas: ' + error.message);
         return;
     }
 
-    if (!data || data.length === 0) {
-        console.log('Nenhuma pesquisa encontrada ou RLS bloqueando acesso');
-        tabela.innerHTML = '<tr><td colspan="5" class="text-center">Nenhuma pesquisa encontrada</td></tr>';
-        return;
-    }
+    pesquisas = data || [];
 
-    pesquisas = data;
-    tabela.innerHTML = '';
+    // Atualiza contadores
+    document.getElementById('totalPesquisas').innerText = pesquisas.length;
+    document.getElementById('nivel1').innerText = pesquisas.filter(p => p.nivel_satisfacao === 1).length;
+    document.getElementById('nivel2').innerText = pesquisas.filter(p => p.nivel_satisfacao === 2).length;
+    document.getElementById('nivel45').innerText = pesquisas.filter(p => p.nivel_satisfacao >= 4).length;
 
-    data.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${p.nome}</td>
-            <td>${p.cpf}</td>
-            <td>${p.nivel_satisfacao === 1 ? 'Muito Insatisfeito' :
-                p.nivel_satisfacao === 2 ? 'Insatisfeito' :
-                    p.nivel_satisfacao === 3 ? 'Neutro' :
-                        p.nivel_satisfacao === 4 ? 'Satisfeito' :
-                            'Muito Satisfeito'
-            }</td>
-            <td>${p.comentario || '-'}</td>
-            <td>${new Date(p.data).toLocaleString()}</td>
-        `;
-        tabela.appendChild(tr);
-    });
-
-    $('#tabelaPesquisas').DataTable({
-        destroy: true,
-        paging: true,
-        searching: true,
-        ordering: true,
-        order: [[4, 'desc']],
-    });
-}
-
-async function checkSession() {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-        console.error('Erro ao verificar sessão:', error);
-        alert('Erro de autenticação. Faça login novamente.');
-        window.location.href = 'login.html';
-        return;
-    }
-
-    const session = data.session;
-    if (!session) {
-        console.log('Usuário não autenticado');
-        window.location.href = 'login.html';
+    // Popula DataTable
+    if ($.fn.DataTable.isDataTable('#tabelaPesquisas')) {
+        tabela.clear().rows.add(pesquisas.map(p => [
+            p.nome,
+            p.cpf,
+            p.nivel_satisfacao === 1 ? 'Muito Insatisfeito' :
+            p.nivel_satisfacao === 2 ? 'Insatisfeito' :
+            p.nivel_satisfacao === 3 ? 'Neutro' :
+            p.nivel_satisfacao === 4 ? 'Satisfeito' :
+            'Muito Satisfeito',
+            p.comentario || '-',
+            new Date(p.data).toLocaleString()
+        ])).draw();
     } else {
-        console.log('Usuário logado:', session.user.email);
-        carregarPesquisas();
+        tabela = $('#tabelaPesquisas').DataTable({
+            data: pesquisas.map(p => [
+                p.nome,
+                p.cpf,
+                p.nivel_satisfacao === 1 ? 'Muito Insatisfeito' :
+                p.nivel_satisfacao === 2 ? 'Insatisfeito' :
+                p.nivel_satisfacao === 3 ? 'Neutro' :
+                p.nivel_satisfacao === 4 ? 'Satisfeito' :
+                'Muito Satisfeito',
+                p.comentario || '-',
+                new Date(p.data).toLocaleString()
+            ]),
+            columns: [
+                { title: "Nome" },
+                { title: "CPF" },
+                { title: "Nível de Satisfação" },
+                { title: "Comentário" },
+                { title: "Data" }
+            ],
+            order: [[4, 'desc']],
+            pageLength: 10
+        });
     }
 }
 
-document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-        alert('Erro ao deslogar: ' + error.message);
-        return;
-    }
-    localStorage.removeItem('supabaseSession');
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await supabase.auth.signOut();
     window.location.href = 'login.html';
 });
 
 document.getElementById('gerarPDF').addEventListener('click', () => {
-    if (pesquisas.length === 0) {
-        alert('Nenhuma pesquisa carregada!');
-        return;
-    }
+    if (!pesquisas.length) return alert('Nenhuma pesquisa carregada!');
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-
-    doc.setFontSize(16);
     doc.text('Pesquisas de Satisfação', 14, 20);
 
     const rows = pesquisas.map(p => [
         p.nome,
         p.cpf,
         p.nivel_satisfacao === 1 ? 'Muito Insatisfeito' :
-            p.nivel_satisfacao === 2 ? 'Insatisfeito' :
-                p.nivel_satisfacao === 3 ? 'Neutro' :
-                    p.nivel_satisfacao === 4 ? 'Satisfeito' :
-                        'Muito Satisfeito',
+        p.nivel_satisfacao === 2 ? 'Insatisfeito' :
+        p.nivel_satisfacao === 3 ? 'Neutro' :
+        p.nivel_satisfacao === 4 ? 'Satisfeito' :
+        'Muito Satisfeito',
         p.comentario || '-',
         new Date(p.data).toLocaleString()
     ]);
 
     doc.autoTable({
         startY: 30,
-        head: [['Nome', 'CPF', 'Nível', 'Comentário', 'Data']],
-        body: rows,
-        styles: { fontSize: 10, cellPadding: 3 },
-        headStyles: { fillColor: [108, 92, 231], textColor: 255, halign: 'center' },
-        alternateRowStyles: { fillColor: [240, 240, 240] },
-        columnStyles: {
-            0: { cellWidth: 35 },
-            1: { cellWidth: 30 },
-            2: { cellWidth: 35 },
-            3: { cellWidth: 'auto' },
-            4: { cellWidth: 40 }
-        },
-        margin: { left: 14, right: 14 },
+        head: [['Nome','CPF','Nível','Comentário','Data']],
+        body: rows
     });
 
     doc.save('pesquisas.pdf');
 });
 
 
-checkSession();
+checkSession().then(() => carregarPesquisas());

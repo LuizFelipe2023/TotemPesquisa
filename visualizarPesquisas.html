@@ -1,45 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizar Pesquisas</title>
+    <title>Painel Pesquisas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="css/painelPesquisas.css">
 </head>
-
 <body>
-    <div class="card">
-        <div class="card-header">
-            <h2 class="mb-2">Pesquisas de Satisfação</h2>
-            <p class="mb-0">Visualize as pesquisas e gere um PDF</p>
-        </div>
-        <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between mb-3 gap-2">
-                <div class="d-flex flex-wrap gap-2">
-                    <button id="carregarPesquisas" class="btn btn-success">Carregar Pesquisas</button>
-                    <button id="gerarPDF" class="btn btn-primary">Gerar PDF</button>
-                </div>
+    <div class="container my-4">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Painel de Pesquisas de Satisfação</h2>
                 <button id="logoutBtn" class="btn btn-danger">Sair</button>
             </div>
+            <div class="card-body">
 
-            <div class="table-responsive">
-                <table class="table table-striped" id="tabelaPesquisas">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>Nível de Satisfação</th>
-                            <th>Comentário</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+             
+                <div class="row mb-4" id="resumoCards">
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center bg-primary text-white p-3 shadow-sm">
+                            <h5>Total de Pesquisas</h5>
+                            <h3 id="totalPesquisas">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center bg-danger text-white p-3 shadow-sm">
+                            <h5>Muito Insatisfeito 😡</h5>
+                            <h3 id="nivel1">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center bg-warning text-dark p-3 shadow-sm">
+                            <h5>Insatisfeito 🙁</h5>
+                            <h3 id="nivel2">0</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center bg-success text-white p-3 shadow-sm">
+                            <h5>Satisfeito 🙂 / Muito Satisfeito 😃</h5>
+                            <h3 id="nivel45">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-end mb-3 gap-2">
+                    <button id="gerarPDF" class="btn btn-primary">Gerar PDF</button>
+                </div>
+
+
+                <div class="table-responsive W-100">
+                    <table class="table table-striped" id="tabelaPesquisas">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF</th>
+                                <th>Nível de Satisfação</th>
+                                <th>Comentário</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -52,5 +77,4 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="js/visualizarPesquisas.js"></script>
 </body>
-
 </html>
