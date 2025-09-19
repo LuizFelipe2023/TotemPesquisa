@@ -27,13 +27,11 @@ async function carregarPesquisas() {
 
     pesquisas = data || [];
 
-    // Atualiza contadores
     document.getElementById('totalPesquisas').innerText = pesquisas.length;
     document.getElementById('nivel1').innerText = pesquisas.filter(p => p.nivel_satisfacao === 1).length;
     document.getElementById('nivel2').innerText = pesquisas.filter(p => p.nivel_satisfacao === 2).length;
     document.getElementById('nivel45').innerText = pesquisas.filter(p => p.nivel_satisfacao >= 4).length;
 
-    // Popula DataTable
     if ($.fn.DataTable.isDataTable('#tabelaPesquisas')) {
         tabela.clear().rows.add(pesquisas.map(p => [
             p.nome,
