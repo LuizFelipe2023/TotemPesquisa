@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     }
 
-    // Processamento do formulário
     document.getElementById('pesquisa').addEventListener('submit', async function (event) {
         event.preventDefault();
 
